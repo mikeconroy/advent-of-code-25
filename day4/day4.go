@@ -63,7 +63,6 @@ func (g Grid) countSurroundingsAt(loc key) int {
 				continue
 			}
 			if g.grid[key{newX, newY}] == '@' {
-
 				count++
 			}
 		}
@@ -87,5 +86,26 @@ func part1(input []string) string {
 }
 
 func part2(input []string) string {
-	return fmt.Sprint(0)
+	grid := loadGrid(input)
+	accessCount := -1
+	removedCount := 0
+	for accessCount != 0 {
+		accessCount = 0
+		toRemove := make([]key, 10)
+		for y := 0; y < grid.rowsCount; y++ {
+			for x := 0; x < grid.colsCount; x++ {
+				if grid.grid[key{x, y}] == '@' {
+					if grid.countSurroundingsAt(key{x, y}) < 4 {
+						accessCount++
+						removedCount++
+						toRemove = append(toRemove, key{x, y})
+					}
+				}
+			}
+		}
+		for _, loc := range toRemove {
+			grid.grid[loc] = '.'
+		}
+	}
+	return fmt.Sprint(removedCount)
 }

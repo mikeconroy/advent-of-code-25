@@ -17,7 +17,7 @@ func TestDay4Part1(t *testing.T) {
 
 func TestDay4Part2(t *testing.T) {
 	input := utils.ReadFileIntoSlice("input_test")
-	expected := "0"
+	expected := "43"
 	result := part2(input)
 	if result != expected {
 		t.Fatal("Day 4 - Part 2 output should be", expected, "but got", result)
