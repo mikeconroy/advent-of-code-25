@@ -1,8 +1,10 @@
 package day5
 
 import (
+	"cmp"
 	"fmt"
 	"github.com/mikeconroy/advent-of-code-25/utils"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -58,6 +60,30 @@ func part1(input []string) string {
 	return fmt.Sprint(freshCount)
 }
 
+func cmpRange(a, b Range) int {
+	return cmp.Compare(a.min, b.min)
+}
+
+// 312407320826103 - too low
+// 403435807163373 - too high
+// 348548952146327 - Not correct
+// 345761047266506 - Not Correct
 func part2(input []string) string {
-	return fmt.Sprint(0)
+	db := loadInput(input)
+	slices.SortFunc(db.ranges, cmpRange)
+	currRange := db.ranges[0]
+	result := 0
+	for i := 1; i < len(db.ranges); i++ {
+		newRange := db.ranges[i]
+		if newRange.min <= currRange.max {
+			if newRange.max > currRange.max {
+				currRange.max = newRange.max
+			}
+		} else {
+			result += (currRange.max - currRange.min + 1)
+			currRange = newRange
+		}
+	}
+	result += (currRange.max - currRange.min + 1)
+	return fmt.Sprint(result)
 }
