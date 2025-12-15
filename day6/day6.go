@@ -9,6 +9,7 @@ import (
 
 func Run() (string, string) {
 	input := utils.ReadFileIntoSlice("day6/input")
+	input = input[:len(input)-1]
 	return part1(input), part2(input)
 }
 
@@ -59,10 +60,9 @@ func parseInput(input []string) []Problem {
 	return probs
 }
 
-func part1(input []string) string {
-	problems := parseInput(input)
+func solveProblems(probs []Problem) int {
 	total := 0
-	for _, problem := range problems {
+	for _, problem := range probs {
 		res := problem.nums[0]
 		for _, val := range problem.nums[1:] {
 			if problem.op == MULTIPLY {
@@ -73,9 +73,40 @@ func part1(input []string) string {
 		}
 		total += res
 	}
-	return fmt.Sprint(total)
+	return total
+}
+
+func part1(input []string) string {
+	problems := parseInput(input)
+	res := solveProblems(problems)
+	return fmt.Sprint(res)
 }
 
 func part2(input []string) string {
-	return fmt.Sprint(0)
+	opSplit := strings.Fields(input[len(input)-1])
+	probs := make([]Problem, len(opSplit))
+	for idx, opStr := range opSplit {
+		probs[idx].op, _ = operationMap[opStr]
+	}
+
+	cols := make([]string, len(input[0]))
+
+	for _, line := range input[:len(input)-1] {
+		for idx := 0; idx < len(line); idx++ {
+			cols[idx] += string(line[idx])
+		}
+	}
+
+	currProbIdx := 0
+	for _, col := range cols {
+		col = strings.Trim(col, " ")
+		if col == "" {
+			currProbIdx++
+		} else {
+			val, _ := strconv.Atoi(col)
+			probs[currProbIdx].nums = append(probs[currProbIdx].nums, val)
+		}
+	}
+	res := solveProblems(probs)
+	return fmt.Sprint(res)
 }
