@@ -14,11 +14,13 @@ func Run() (string, string) {
 func loadGrid(input []string) [][]rune {
 	var grid [][]rune
 	for _, line := range input {
-		row := make([]rune, len(line))
-		for idx, char := range line {
-			row[idx] = char
+		if line != "" {
+			row := make([]rune, len(line))
+			for idx, char := range line {
+				row[idx] = char
+			}
+			grid = append(grid, row)
 		}
-		grid = append(grid, row)
 	}
 	return grid
 }
@@ -53,6 +55,43 @@ func part1(input []string) string {
 	return fmt.Sprint(splitCount)
 }
 
+type Key struct {
+	x, y int
+}
+
+func traverse(x, y int, grid [][]rune, cache map[Key]int) int {
+	key := Key{x, y}
+	if res, ok := cache[key]; ok {
+		return res
+	}
+
+	if y == len(grid) {
+		return 1
+	}
+
+	if grid[y][x] == '^' {
+		res := traverse(x-1, y+1, grid, cache) + traverse(x+1, y+1, grid, cache)
+		cache[key] = res
+		return res
+	} else {
+		res := traverse(x, y+1, grid, cache)
+		cache[key] = res
+		return res
+	}
+}
+
 func part2(input []string) string {
-	return fmt.Sprint(0)
+	grid := loadGrid(input)
+	startX, startY := 0, 0
+	for y := range grid {
+		for x := range grid[y] {
+			if grid[y][x] == 'S' {
+				startX = x
+				startY = y
+				break
+			}
+		}
+	}
+	res := traverse(startX, startY, grid, make(map[Key]int))
+	return fmt.Sprint(res)
 }
