@@ -1,2 +1,4 @@
+github.com/spakin/disjoint v1.0.1 h1:5Uel9zibS3KM5F0RDIIwrUSaQbTnBMjf37D4s6tv3Gs=
+github.com/spakin/disjoint v1.0.1/go.mod h1:QSto0rbkWBC4daR4z0J0IrQhj/eQD5J5AXj61c7KbZs=
 golang.org/x/exp v0.0.0-20240119083558-1b970713d09a h1:Q8/wZp0KX97QFTc2ywcOE0YRjZPVIx+MXInMzdvQqcA=
 golang.org/x/exp v0.0.0-20240119083558-1b970713d09a/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=
