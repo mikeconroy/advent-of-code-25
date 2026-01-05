@@ -63,11 +63,8 @@ func compEdges(e1, e2 Edge) int {
 	return cmp.Compare(e1.dist, e2.dist)
 }
 
-// Kruskals Algorithm
-func part1(input []string, targetConnections int) string {
-	points := loadPoints(input)
+func generateEdges(points []*Point) []Edge {
 	edges := make([]Edge, 0)
-	// Calculate the length of all possible edges.
 	for idx, p1 := range points[:len(points)-1] {
 		for _, p2 := range points[idx+1:] {
 			edge := Edge{p1, p2, p1.distanceTo(p2)}
@@ -75,6 +72,13 @@ func part1(input []string, targetConnections int) string {
 		}
 	}
 	slices.SortFunc(edges, compEdges)
+	return edges
+}
+
+// Kruskals Algorithm
+func part1(input []string, targetConnections int) string {
+	points := loadPoints(input)
+	edges := generateEdges(points)
 	for cxns := 0; cxns < targetConnections; cxns++ {
 		disjoint.Union(edges[cxns].p1.circuit, edges[cxns].p2.circuit)
 	}
@@ -105,6 +109,23 @@ func printPoints(points []*Point) {
 	}
 }
 
+func countCircuits(points []*Point) int {
+	circuits := make(map[*disjoint.Element]bool)
+	for _, point := range points {
+		circuits[point.circuit.Find()] = true
+	}
+	return len(circuits)
+}
+
 func part2(input []string) string {
-	return fmt.Sprint(0)
+	points := loadPoints(input)
+	edges := generateEdges(points)
+	idx := 0
+	for countCircuits(points) != 1 {
+		disjoint.Union(edges[idx].p1.circuit, edges[idx].p2.circuit)
+		idx++
+	}
+	idx--
+	res := edges[idx].p1.x * edges[idx].p2.x
+	return fmt.Sprint(res)
 }
